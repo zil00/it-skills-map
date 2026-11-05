@@ -698,3 +698,9 @@ API extraction (Haiku ~$2–4/month or Opus ~$60–80/month).
   11, NOC 6. Roles under 20 need grouping or a "small sample" treatment on
   the site (decide in Phase 2).
 - 2026-11-05 — Small roles grouped for the website: 14 database roles → 10 website roles (section 8b, item 5).
+- 2026-11-05 — Phase 2 built locally (not pushed). `export_site_data.py` writes
+  count "cells" per (website role, province, seniority, remote) so the site can
+  apply filters by adding cells; % use `v_jobs_unique`, location charts all rows.
+  React site in `site/` with the 6 pages; % hidden below n = 20 (counts shown);
+  filters can start from the link (`#/roles/x?province=ON`). GitHub repo and
+  deploy workflow not created yet.
