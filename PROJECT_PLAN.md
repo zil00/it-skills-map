@@ -704,3 +704,4 @@ API extraction (Haiku ~$2–4/month or Opus ~$60–80/month).
   React site in `site/` with the 6 pages; % hidden below n = 20 (counts shown);
   filters can start from the link (`#/roles/x?province=ON`). GitHub repo and
   deploy workflow not created yet.
+- 2026-11-05 — Phase 3 done: public repo https://github.com/zil00/it-skills-map, GitHub Pages deploy via Actions, live at https://zil00.github.io/it-skills-map/.
