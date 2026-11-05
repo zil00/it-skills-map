@@ -614,6 +614,29 @@ API extraction (Haiku ~$2–4/month or Opus ~$60–80/month).
    max 750 results, hard cap $1.50 total (fits the ~$1.60 free credit left).
    Check `python scripts/scrape.py credit` first.
 
+5. **Small roles are grouped on the website (DECIDED).** The database keeps
+   the 14 roles; the website shows 10 display roles. The mapping lives in
+   `export_site_data.py` (Phase 2). Each grouped page lists which roles it
+   includes ("Includes: Help Desk Analyst, Service Desk Analyst, Desktop
+   Support"). Counts are unique postings (`v_jobs_unique`), 2026-11-05 data:
+
+   | Website role | Database roles included | Unique postings |
+   |---|---|---|
+   | Technical Support | Technical Support | 163 |
+   | Systems Administrator | Systems Administrator | 126 |
+   | SOC / Cybersecurity Analyst | SOC / Cybersecurity Analyst | 126 |
+   | IT Support Specialist | IT Support Specialist | 119 |
+   | Network, NOC & Telecom | Network Technician / Admin + NOC Technician + Telecommunications Technician | 87 |
+   | Application Support | Application Support | 84 |
+   | Help Desk, Service Desk & Desktop Support | Help Desk Analyst + Service Desk Analyst + Desktop Support | 55 |
+   | Technology Analyst | Technology Analyst | 35 |
+   | Systems Support | Systems Support | 34 |
+   | Software / Product Support | Software / Product Support | 31 |
+
+   That is 10 website roles, all with ≥ 30 postings. The n < 20 rule still
+   applies inside pages (e.g. a province or seniority filter that leaves
+   fewer than 20 postings hides percentages).
+
 ---
 
 ## 9. Open questions
@@ -674,3 +697,4 @@ API extraction (Haiku ~$2–4/month or Opus ~$60–80/month).
   Support 31, Service Desk 28, Telecom Tech 18, Help Desk 16, Desktop Support
   11, NOC 6. Roles under 20 need grouping or a "small sample" treatment on
   the site (decide in Phase 2).
+- 2026-11-05 — Small roles grouped for the website: 14 database roles → 10 website roles (section 8b, item 5).
