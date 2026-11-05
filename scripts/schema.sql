@@ -124,7 +124,24 @@ CREATE TABLE IF NOT EXISTS unmapped_skills (
   first_seen  TEXT NOT NULL
 );
 
+-- Repeated postings (same company + same description text, usually one per
+-- city) share a group. Stats count one row per group; location charts use all.
+-- Rebuilt by dedupe.py.
+CREATE TABLE IF NOT EXISTS job_groups (
+  job_id        TEXT PRIMARY KEY REFERENCES jobs(id) ON DELETE CASCADE,
+  group_id      TEXT NOT NULL,          -- id of the canonical job in the group
+  group_size    INTEGER NOT NULL,
+  is_canonical  INTEGER NOT NULL        -- 1 for exactly one job per group
+);
+CREATE INDEX IF NOT EXISTS idx_job_groups_group ON job_groups(group_id);
+
 -- ===================== VIEWS =====================
+-- One row per unique posting (use this for skill / requirement percentages).
+CREATE VIEW IF NOT EXISTS v_jobs_unique AS
+SELECT j.*, g.group_size
+FROM jobs j JOIN job_groups g ON g.job_id = j.id
+WHERE g.is_canonical = 1;
+
 CREATE VIEW IF NOT EXISTS v_skill_demand AS
 SELECT r.name AS role, s.name AS skill, s.category,
        COUNT(*) AS jobs_mentioning,

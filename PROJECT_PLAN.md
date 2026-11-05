@@ -658,3 +658,19 @@ API extraction (Haiku ~$2–4/month or Opus ~$60–80/month).
 - 2026-11-05 — Phase 1 committed (`efbf890`). Decisions 8b: dedupe repeated
   postings, engineer titles out, keep French. Added `scrape.py topup` and
   `scrape.py credit` for the support-role top-up scrape (not run yet).
+- 2026-11-05 — Top-up scrape ran: 8 searches, 707 items, ~$1.41, but only
+  225 distinct jobs and just 14 new ones — LinkedIn's public search had
+  already returned nearly all support postings for the month. Jobs titled
+  "Help Desk" / "Service Desk" / "Desktop Support" are simply rare; most
+  support jobs are titled Technical Support / IT Support Specialist.
+  Total now 1,613 jobs, 999 in scope.
+- 2026-11-05 — Added `dedupe.py` + `job_groups` table + `v_jobs_unique` view
+  (same company + same description = one posting). 1,613 rows → 1,429 unique;
+  in scope 999 → 860 unique. Pipeline order: load → basic_fields → dedupe →
+  extract. Stats must read `v_jobs_unique`; location charts use all rows.
+- Unique in-scope postings per role: Technical Support 163, Systems Admin 126,
+  SOC/Cyber 126, IT Support Specialist 119, Application Support 84, Network
+  Tech/Admin 63, Technology Analyst 35, Systems Support 34, Software/Product
+  Support 31, Service Desk 28, Telecom Tech 18, Help Desk 16, Desktop Support
+  11, NOC 6. Roles under 20 need grouping or a "small sample" treatment on
+  the site (decide in Phase 2).
