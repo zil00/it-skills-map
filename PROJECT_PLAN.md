@@ -590,11 +590,37 @@ API extraction (Haiku ~$2–4/month or Opus ~$60–80/month).
 
 ---
 
+## 8b. Phase 1 follow-up decisions (2026-11-05)
+
+1. **Duplicate postings — count once.** 40 postings are repeated across
+   cities with identical text (142 extra rows, ~14% of in-scope jobs).
+   Skill / requirement percentages count each posting once (group by
+   company + normalized description). Location charts still count every
+   city the posting lists.
+2. **Engineer titles stay out of scope.** Network / systems / security
+   engineer, business analyst and developer titles are excluded to keep the
+   site on entry-level and early-career roles. Possible later use: a "where
+   this leads" panel on the Compare page.
+3. **French postings — keep.** 231 in-scope jobs (mostly Quebec). Show the
+   posting language, state the lower French accuracy (~70% skill recall) on
+   the About page, and add the most common missing French terms/patterns to
+   the dictionary before the website build.
+4. **Top-up scrape for under-represented support roles.** The one-time run
+   returned very few results for short keywords (help desk 19, service desk
+   20, desktop support 23, IT support 47) while 7 other searches hit 150.
+   `scripts/scrape.py topup` runs 8 searches: one OR search (200) + longer
+   title phrases (help desk analyst/technician, service desk analyst, IT
+   support analyst/specialist, IT technician, desktop support technician),
+   max 750 results, hard cap $1.50 total (fits the ~$1.60 free credit left).
+   Check `python scripts/scrape.py credit` first.
+
+---
+
 ## 9. Open questions
 
 - [ ] Canada only, or other countries too?
-- [ ] Include French-language (Quebec) postings?
-- [ ] Script language: Python assumed — confirm
+- [x] Include French-language (Quebec) postings? — yes (8b)
+- [x] Script language: Python
 - [x] Website audience: tool for other job seekers
 - [x] Repo name: `it-skills-map`
 - [x] TypeScript
@@ -629,3 +655,6 @@ API extraction (Haiku ~$2–4/month or Opus ~$60–80/month).
   public search. One-time scrape run `xgHw0bvsPZXB6vhcH`: 1,555 items, $3.11,
   posted 2026-10-07 → 2026-11-05. Rule-based extraction `rules-v3`: 986 in-scope
   jobs; held-out check (15 jobs) skill recall ~87% (EN ~92%, FR ~70%), precision ~97%.
+- 2026-11-05 — Phase 1 committed (`efbf890`). Decisions 8b: dedupe repeated
+  postings, engineer titles out, keep French. Added `scrape.py topup` and
+  `scrape.py credit` for the support-role top-up scrape (not run yet).

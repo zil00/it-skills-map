@@ -5,6 +5,9 @@ Usage:
   python scripts/scrape.py plan                 # show input + cost estimate (no API call)
   python scripts/scrape.py run --yes            # start the run, wait, download
   python scripts/scrape.py test-or --yes        # ~10-result OR-syntax test (~$0.02)
+  python scripts/scrape.py credit               # this month's Apify credit used / left
+  python scripts/scrape.py topup                # show the top-up searches + cost
+  python scripts/scrape.py topup --yes          # run the top-up (cap $1.50 total)
   python scripts/scrape.py download RUN_ID [--name NAME]
                                                 # download an existing run's dataset
 
@@ -172,6 +175,69 @@ def cmd_test_or(args):
     run_and_download(actor_input, 10, 0.05, "test_or")
 
 
+# Top-up scrape: the short support keywords returned very few results in the
+# one-time run (help desk 19, service desk 20, desktop support 23, IT support 47).
+# Retry the entry-level support roles with an OR search (proven in test-or) and
+# longer title phrases. Sized to fit the ~$1.60 of free credit left.
+TOPUP_SEARCHES = [
+    ('"help desk" OR "service desk" OR "IT support" OR "desktop support"', 200),
+    ("help desk analyst", 80),
+    ("help desk technician", 80),
+    ("service desk analyst", 80),
+    ("IT support analyst", 80),
+    ("IT support specialist", 80),
+    ("IT technician", 80),
+    ("desktop support technician", 70),
+]
+TOPUP_MAX_USD = 1.50
+
+
+def build_topup_input() -> list[dict]:
+    """One actor input per search, since limitPerSource is per run input."""
+    return [{"urls": [search_url(kw)], "limitPerSource": limit, "scrapeCompany": False}
+            for kw, limit in TOPUP_SEARCHES]
+
+
+def topup_estimate() -> dict:
+    max_results = sum(limit for _, limit in TOPUP_SEARCHES)
+    return {
+        "searches": len(TOPUP_SEARCHES),
+        "max_results": max_results,
+        "max_cost_usd": round(max_results * PRICE_PER_RESULT, 2),
+        "hard_cap_usd_total": TOPUP_MAX_USD,
+    }
+
+
+def cmd_topup(args):
+    print("Top-up searches (keyword, max results):")
+    for kw, limit in TOPUP_SEARCHES:
+        print(f"  {limit:>4}  {kw}")
+    print("Estimate:", json.dumps(topup_estimate(), indent=2))
+    if not args.yes:
+        print("\nPlan only. Re-run with --yes to start the paid runs.")
+        return
+    spent_cap = 0.0
+    for i, (actor_input, (kw, limit)) in enumerate(zip(build_topup_input(), TOPUP_SEARCHES), 1):
+        cap = round(min(limit * PRICE_PER_RESULT + 0.01, TOPUP_MAX_USD - spent_cap), 2)
+        if cap <= 0.01:
+            print(f"Stopping: top-up budget of ${TOPUP_MAX_USD} reached.")
+            break
+        spent_cap += cap
+        print(f"\n[{i}/{len(TOPUP_SEARCHES)}] {kw}  (cap ${cap})")
+        run_and_download(actor_input, limit, cap, f"topup{i:02d}")
+
+
+def cmd_credit(_):
+    """Show this month's Apify usage vs the plan limit."""
+    d = api("GET", "/users/me/limits")["data"]
+    limit = d["limits"].get("maxMonthlyUsageUsd")
+    used = d["current"].get("monthlyUsageUsd")
+    cycle = d.get("monthlyUsageCycle", {})
+    print(f"Used ${used:.2f} of ${limit:.2f} this cycle "
+          f"({cycle.get('startAt', '?')[:10]} to {cycle.get('endAt', '?')[:10]}); "
+          f"left ${limit - used:.2f}")
+
+
 def cmd_download(args):
     download(args.run_id, args.name)
 
@@ -184,6 +250,9 @@ def main():
     s.add_argument("--name", default="onetime"); s.set_defaults(fn=cmd_run)
     s = sub.add_parser("test-or"); s.add_argument("--yes", action="store_true")
     s.set_defaults(fn=cmd_test_or)
+    s = sub.add_parser("topup"); s.add_argument("--yes", action="store_true")
+    s.set_defaults(fn=cmd_topup)
+    s = sub.add_parser("credit"); s.set_defaults(fn=cmd_credit)
     s = sub.add_parser("download"); s.add_argument("run_id")
     s.add_argument("--name", default="download"); s.set_defaults(fn=cmd_download)
     args = p.parse_args()
