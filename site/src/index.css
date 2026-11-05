@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0b0b0b;
+  --color-ink-2: #52514e;
+  --color-ink-3: #8a8983;
+  --color-surface: #fcfcfb;
+  --color-line: #e6e5e0;
+  --color-req: #2a78d6;
+  --color-nice: #eb6834;
+}
+
+body {
+  @apply bg-surface text-ink antialiased;
+}
