@@ -49,8 +49,10 @@ SITE_ROLES = [
 ]
 ROLE_OF_DB = {db_id: slug for slug, _, ids, _ in SITE_ROLES for db_id in ids}
 
-# Order used in "career path" view on the Compare page.
-CAREER_PATH = ["help-desk-service-desk", "it-support-specialist", "technical-support",
+# Order used in "career path" view on the Compare page. Technical Support is left
+# out: in this data it is mostly customer/product support, not a step on the
+# internal IT ladder. Network and Systems Admin are alternative branches.
+CAREER_PATH = ["help-desk-service-desk", "it-support-specialist",
                "network-noc-telecom", "systems-administrator", "soc-cybersecurity-analyst"]
 
 PROVINCES = {

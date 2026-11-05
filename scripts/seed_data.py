@@ -382,11 +382,18 @@ SKILLS = [
                                            "script", "automate", "automating"]),
     ("Log analysis", "concept", ["log analysis", "logs", "log files", "event logs",
                                  "log management"]),
-    ("Documentation / knowledge base", "concept", ["sop", "faqs", "documentation technique", "articles de connaissances", "base de connaissances", "user guides", "how-to guides", "documentation", "knowledge base",
-                                                   "knowledge articles", "kb articles",
-                                                   "technical documentation",
-                                                   "standard operating procedures",
-                                                   "sops", "runbooks", "documenter"]),
+    # Tightened 2026-11-05: bare "documentation"/"documenter" matched almost every
+    # support posting ("document incidents", "limited documentation") -> 65%.
+    # Only count explicit writing/maintaining of docs or knowledge bases.
+    ("Documentation / knowledge base", "concept", ["sop", "sops", "documentation technique", "articles de connaissances",
+                                                   "base de connaissances", "knowledge base", "knowledge-base",
+                                                   "knowledge articles", "kb articles", "knowledge management",
+                                                   "technical documentation", "technical writing",
+                                                   "standard operating procedures", "runbooks",
+                                                   "write documentation", "create documentation",
+                                                   "maintain documentation", "update documentation",
+                                                   "documentation skills", "rédiger de la documentation",
+                                                   "rédaction de documentation"]),
     ("Encryption / PKI", "concept", ["encryption", "pki", "ssl/tls",
                                      "tls", "ssl", "bitlocker"]),
     ("Email / M365 admin", "concept", ["email administration", "mailboxes", "mailbox",
@@ -409,7 +416,12 @@ SKILLS = [
     ("Storage (SAN/NAS)", "concept", ["san", "nas", "storage", "netapp", "pure storage", "storage systems", "stockage"]),
     ("Infrastructure as Code", "concept", ["iac", "infrastructure as code", "puppet", "chef", "bicep", "arm templates", "cloudformation"]),
     ("Data center", "concept", ["data center", "data centre", "datacenter", "datacentre", "data centers", "data centres", "server room", "centre de données", "centres de données"]),
-    ("Information security (general)", "concept", ["ddos", "sécurité de l'information", "contrôles de sécurité", "information security", "it security", "cybersecurity", "cyber security", "cyber-security", "security best practices", "sécurité informatique", "cybersécurité", "security controls", "security policies"]),
+    # Tightened 2026-11-05: bare "cybersecurity"/"IT security"/"security policies"
+    # matched company boilerplate, degree names and policy-compliance lines -> 33%.
+    ("Information security (general)", "concept", ["ddos", "sécurité de l'information", "contrôles de sécurité",
+                                                    "information security", "security best practices",
+                                                    "security controls", "security principles",
+                                                    "principes de sécurité"]),
     ("DLP / data protection", "concept", ["dlp", "data loss prevention", "purview", "microsoft purview", "data classification"]),
     ("IDS / IPS", "concept", ["ids", "ips", "ids/ips", "intrusion detection", "intrusion prevention"]),
     ("MDM", "concept", ["mdm", "mobile device management", "airwatch", "workspace one", "mobileiron"]),

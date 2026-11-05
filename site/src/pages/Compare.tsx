@@ -169,9 +169,9 @@ export default function Compare() {
     return (
       <Section
         title="A common career path"
-        sub="One typical way people move up in IT support. Each step shows what postings ask for, and the skills that become common at that step."
+        sub="One typical way people move up from IT support. Network and systems administration are two common branches; many people take one or the other before moving into security. Each step shows what postings ask for, and the skills that become common at that step."
       >
-        <ol className="grid gap-3 md:grid-cols-3 lg:grid-cols-6">
+        <ol className="grid gap-3 md:grid-cols-3 lg:grid-cols-5">
           {steps.map(({ slug, st }, i) => {
             const prev = i > 0 ? steps[i - 1].st : undefined
             const prevTop = new Set(prev ? top(prev.any, 10, (id) => isLearnable(skills.get(id))).map(([id]) => id) : [])
