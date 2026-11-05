@@ -1,0 +1,18 @@
+# Private data — never commit
+jobs.db
+jobs.db-*
+*.db-journal
+data/raw/
+
+# Secrets
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node / site build
+node_modules/
+site/dist/
