@@ -145,7 +145,7 @@ export function FilterBar({ n, hideSeniority = false, unit = 'postings' }: { n?:
           {active && (
             <button
               type="button"
-              className="min-h-9 rounded-lg px-2 text-sm text-req hover:underline"
+              className="min-h-9 rounded-lg px-2 text-sm text-link hover:underline"
               onClick={() => setFilters({ province: '', seniority: hideSeniority ? filters.seniority : '', remote: '' })}
             >
               Clear

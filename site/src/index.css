@@ -6,7 +6,8 @@
   --color-ink-3: #6b6a65; /* 5.4:1 on white, 4.7:1 on the palest tints (WCAG AA) */
   --color-surface: #fcfcfb;
   --color-line: #e6e5e0;
-  --color-req: #2a78d6;
+  --color-req: #2a78d6; /* bars and dots */
+  --color-link: #1f6bc4; /* blue text: 5.3:1 on white, 4.7:1 on the pale blue nav highlight */
   --color-nice: #eb6834;
 }
 

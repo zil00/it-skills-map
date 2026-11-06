@@ -38,7 +38,7 @@ export default function Role() {
   return (
     <div className="space-y-6">
       <div>
-        <Link to="/" className="inline-block py-1 text-sm text-req hover:underline">
+        <Link to="/" className="inline-block py-1 text-sm text-link hover:underline">
           ← All roles
         </Link>
         <h1 className="mt-2 text-3xl font-bold tracking-tight">{role.name}</h1>
@@ -166,7 +166,7 @@ function NotFound() {
   return (
     <div className="py-16 text-center">
       <p className="text-ink-2">That role doesn't exist.</p>
-      <Link to="/" className="mt-2 inline-block text-req hover:underline">
+      <Link to="/" className="mt-2 inline-block text-link hover:underline">
         See all roles
       </Link>
     </div>

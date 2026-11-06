@@ -94,7 +94,7 @@ export default function Skills() {
                       )
                     }
                     className={`flex w-full items-baseline justify-between gap-2 rounded-md px-2 py-1.5 text-left ${
-                      s.id === selectedId ? 'bg-req/10 font-medium text-req' : 'hover:bg-black/5'
+                      s.id === selectedId ? 'bg-req/10 font-medium text-link' : 'hover:bg-black/5'
                     }`}
                   >
                     <span>

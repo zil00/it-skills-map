@@ -26,7 +26,7 @@ export default function Layout() {
           main?.focus()
           main?.scrollIntoView()
         }}
-        className="sr-only z-50 rounded-md border border-line bg-white text-sm font-medium text-req shadow focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:px-3 focus:py-2"
+        className="sr-only z-50 rounded-md border border-line bg-white text-sm font-medium text-link shadow focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:px-3 focus:py-2"
       >
         Skip to content
       </a>
@@ -45,7 +45,7 @@ export default function Layout() {
                 className={({ isActive }) => {
                   // Role pages belong to "Roles".
                   const on = isActive || (to === '/' && pathname.startsWith('/roles/'))
-                  return `rounded-md px-2.5 py-1.5 ${on ? 'bg-req/10 font-medium text-req' : 'text-ink-2 hover:bg-black/5'}`
+                  return `rounded-md px-2.5 py-1.5 ${on ? 'bg-req/10 font-medium text-link' : 'text-ink-2 hover:bg-black/5'}`
                 }}
               >
                 {label}

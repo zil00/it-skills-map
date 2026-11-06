@@ -34,7 +34,7 @@ export default function Home() {
           We read {num(meta.in_scope_unique)} IT job postings from across Canada, from help desk to systems and security
           roles (posted {fmtDate(meta.posted_from)} – {fmtDate(meta.posted_to)}), and counted the skills, certifications,
           experience and pay they mention. Pick a role to see what you need to get hired. Just starting out? See{' '}
-          <Link to="/breaking-in" className="font-medium text-req underline underline-offset-2">
+          <Link to="/breaking-in" className="font-medium text-link underline underline-offset-2">
             Breaking in
           </Link>{' '}
           for the entry-level postings only.
@@ -57,7 +57,7 @@ export default function Home() {
                 className="group flex flex-col rounded-xl border border-line bg-white p-4 transition hover:border-req hover:shadow-sm"
               >
                 <div className="flex items-baseline justify-between gap-2">
-                  <h3 className="font-semibold group-hover:text-req">{r.name}</h3>
+                  <h3 className="font-semibold group-hover:text-link">{r.name}</h3>
                   <span className="shrink-0 text-xs text-ink-3 tabular-nums">{rs.n} postings</span>
                 </div>
                 <p className="mt-1 flex-1 text-sm text-ink-2">{r.blurb}</p>
