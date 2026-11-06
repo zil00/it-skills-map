@@ -78,21 +78,24 @@ export default function Skills() {
             aria-label="Search skills"
             className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-2 focus:outline-req"
           />
-          <ul className="mt-2 max-h-[560px] overflow-y-auto text-sm">
+          <ul className="mt-2 max-h-72 overflow-y-auto text-sm md:max-h-[560px]">
             {list.map((s) => {
               const c = st.any.get(s.id) ?? 0
               return (
                 <li key={s.id}>
                   <button
-                    onClick={() =>
-                      setParams(
-                        (p) => {
-                          const next = new URLSearchParams(p)
-                          next.set('skill', String(s.id))
-                          return next
-                        },
-                      )
-                    }
+                    onClick={() => {
+                      setParams((p) => {
+                        const next = new URLSearchParams(p)
+                        next.set('skill', String(s.id))
+                        return next
+                      })
+                      // On phones the details sit below the list: bring them into view.
+                      if (window.matchMedia('(max-width: 767px)').matches)
+                        requestAnimationFrame(() => {
+                          document.getElementById('skill-detail')?.scrollIntoView({ block: 'start' })
+                        })
+                    }}
                     className={`flex w-full items-baseline justify-between gap-2 rounded-md px-2 py-1.5 text-left ${
                       s.id === selectedId ? 'bg-req/10 font-medium text-link' : 'hover:bg-ink/5'
                     }`}
@@ -112,7 +115,7 @@ export default function Skills() {
           </ul>
         </div>
 
-        <div className="space-y-4">
+        <div id="skill-detail" className="scroll-mt-16 space-y-4 sm:scroll-mt-24">
           <Section title={skill.name} sub={CATEGORY_LABEL[skill.category]}>
             <div className="grid gap-3 sm:grid-cols-3">
               <Big label="Mentioned in" count={st.any.get(selectedId) ?? 0} n={st.n} />
