@@ -88,9 +88,9 @@ Severity:
 
 ## Re-test after fixes
 
-Local build (\`npm run build\` + \`vite preview\`), Chrome 156 via Playwright, with no test shim:
+Local build (`npm run build` + `vite preview`), Chrome 156 via Playwright, with no test shim:
 - **Layout and errors:** all 15 pages at 375/768/1440 in light mode, plus Home and Systems Administrator in dark. No console or page errors, failed requests, sideways scrolling, clipped text, heading problems or unlabelled controls. Load to render: 1.0–1.1 s. Each page has its own title.
 - **Contrast:** every text element on all 15 pages at all 3 sizes passes WCAG AA, in both light and dark.
 - **Functional suite:** nav, role cards, Back/Forward, deep links and refresh, filters (persist across pages, sync with the link, small-sample and zero-result messages), Compare with 2 and 3 roles plus the explained limits, the 5-step career path in order, Skills search (English, French, accent-free, no-match), and checklist ticks after refresh. All pass at all 3 sizes.
-- **Data:** no numbers changed. The only export change is the \`aka\` names in \`skills.json\` (T-09).
+- **Data:** no numbers changed. The only export change is the `aka` names in `skills.json` (T-09).
 
