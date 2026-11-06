@@ -182,7 +182,13 @@ def main():
 
     company_names = sorted(company_index, key=company_index.get)
     used_skill_ids = {int(s) for c in all_cells for k in ("req", "nice") for s in c[k]}
-    skill_list = [{"id": sid, "name": skills[sid][0], "category": skills[sid][1]}
+    # Other names the extractor matches (English variants and French terms), so site search finds
+    # "sauvegarde" or "réseautique". These come from seed_data.py, not from postings.
+    aka = defaultdict(list)
+    for alias, sid in con.execute("SELECT alias, skill_id FROM skill_aliases ORDER BY alias"):
+        if alias != skills[sid][0].lower():
+            aka[sid].append(alias)
+    skill_list = [{"id": sid, "name": skills[sid][0], "category": skills[sid][1], "aka": aka[sid]}
                   for sid in sorted(used_skill_ids, key=lambda s: skills[s][0].lower())]
 
     db_role_names = dict(con.execute("SELECT id, name FROM roles"))

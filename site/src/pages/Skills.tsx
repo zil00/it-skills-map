@@ -6,7 +6,7 @@ import { FilterBar, Loading, Pct, Section, SmallSample } from '../components/ui'
 import { aggregate, isLearnable } from '../lib/aggregate'
 import { useRoles, useSkills, useSummary } from '../lib/data'
 import { useFilters } from '../lib/filters'
-import { pct, showPct } from '../lib/format'
+import { fold, pct, showPct } from '../lib/format'
 
 const CATEGORY_LABEL: Record<string, string> = {
   cert: 'Certification',
@@ -31,8 +31,20 @@ export default function Skills() {
   if (!skillList || !st || !roles || !summary) return <Loading error={error} />
 
   const ranked = [...skillList].sort((a, b) => (st.any.get(b.id) ?? 0) - (st.any.get(a.id) ?? 0))
-  const needle = q.trim().toLowerCase()
-  const list = needle ? ranked.filter((s) => s.name.toLowerCase().includes(needle)) : ranked
+  // Match the English name first, then other names (variants and French terms), ignoring accents.
+  const needle = fold(q.trim())
+  const aliasHit = new Map<number, string>()
+  const list = !needle
+    ? ranked
+    : [
+        ...ranked.filter((s) => fold(s.name).includes(needle)),
+        ...ranked.filter((s) => {
+          if (fold(s.name).includes(needle)) return false
+          const hit = s.aka?.find((a) => fold(a).includes(needle))
+          if (hit) aliasHit.set(s.id, hit)
+          return !!hit
+        }),
+      ]
   const firstTech = ranked.find((s) => isLearnable(s)) ?? ranked[0]
   const selectedId = Number(params.get('skill')) || firstTech.id
   const skill = skills.get(selectedId)!
@@ -61,7 +73,7 @@ export default function Skills() {
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search, e.g. Azure, CCNA, SQL"
+            placeholder="Search, e.g. Azure, CCNA, réseau"
             aria-label="Search skills"
             className="w-full rounded-lg border border-line px-3 py-2 text-sm focus:outline-2 focus:outline-req"
           />
@@ -84,7 +96,12 @@ export default function Skills() {
                       s.id === selectedId ? 'bg-req/10 font-medium text-req' : 'hover:bg-black/5'
                     }`}
                   >
-                    <span>{s.name}</span>
+                    <span>
+                      {s.name}
+                      {aliasHit.has(s.id) && (
+                        <span className="block text-xs font-normal text-ink-3">also called “{aliasHit.get(s.id)}”</span>
+                      )}
+                    </span>
                     <span className="shrink-0 text-xs text-ink-3 tabular-nums">
                       {showPct(st.n) ? `${pct(c, st.n)}%` : c}
                     </span>

@@ -46,6 +46,7 @@ export interface Skill {
   id: number
   name: string
   category: 'cert' | 'concept' | 'tool' | 'platform' | 'soft' | 'other' | 'language'
+  aka?: string[] // other names the extractor matches, including French terms
 }
 
 export interface Meta {

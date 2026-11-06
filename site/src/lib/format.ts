@@ -48,3 +48,6 @@ export function fmtDate(iso?: string) {
   const d = new Date(iso + 'T12:00:00')
   return d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })
 }
+
+/** Lower-case and strip accents, so "securite" finds "sécurité" and vice versa. */
+export const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
