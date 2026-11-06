@@ -10,8 +10,8 @@ import Skills from './pages/Skills'
 
 export default function App() {
   return (
-    <FilterProvider>
-      <HashRouter>
+    <HashRouter>
+      <FilterProvider>
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
@@ -23,7 +23,7 @@ export default function App() {
             <Route path="*" element={<Home />} />
           </Route>
         </Routes>
-      </HashRouter>
-    </FilterProvider>
+      </FilterProvider>
+    </HashRouter>
   )
 }

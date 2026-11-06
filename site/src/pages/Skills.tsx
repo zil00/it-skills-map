@@ -71,7 +71,15 @@ export default function Skills() {
               return (
                 <li key={s.id}>
                   <button
-                    onClick={() => setParams({ skill: String(s.id) })}
+                    onClick={() =>
+                      setParams(
+                        (p) => {
+                          const next = new URLSearchParams(p)
+                          next.set('skill', String(s.id))
+                          return next
+                        },
+                      )
+                    }
                     className={`flex w-full items-baseline justify-between gap-2 rounded-md px-2 py-1.5 text-left ${
                       s.id === selectedId ? 'bg-req/10 font-medium text-req' : 'hover:bg-black/5'
                     }`}
