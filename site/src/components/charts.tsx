@@ -1,20 +1,5 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  LabelList,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
 import { pct, showPct } from '../lib/format'
 
-export const COLOR_A = '#2a78d6' // required / main series
-export const COLOR_B = '#eb6834' // nice to have
-const INK_2 = '#52514e'
-const INK_3 = '#8a8983'
-const GRID = '#ecebe6'
 
 export interface BarRow {
   label: string
@@ -118,49 +103,31 @@ function Legend({ color, label }: { color: string; label: string }) {
   )
 }
 
-/** Vertical columns for ordered categories (years, seniority). */
+/**
+ * Vertical columns for ordered categories (years, seniority), as plain HTML.
+ * Each column gets an equal share of the width and its label wraps underneath, so labels never overlap.
+ */
 export function ColumnChart({ rows, n }: { rows: BarRow[]; n: number }) {
   const usePct = showPct(n)
-  const data = rows.map((r) => ({ ...r, v: usePct ? (100 * r.a) / n : r.a }))
+  const max = Math.max(1, ...rows.map((r) => r.a))
   return (
-    <ResponsiveContainer width="100%" height={220}>
-      <BarChart data={data} margin={{ top: 34, right: 8, bottom: 0, left: 8 }}>
-        <CartesianGrid vertical={false} stroke={GRID} />
-        <XAxis dataKey="label" tickLine={false} axisLine={{ stroke: GRID }} tick={{ fontSize: 12, fill: INK_2 }} interval={0} />
-        <YAxis hide domain={[0, usePct ? 'auto' : 'auto']} />
-        <Tooltip
-          cursor={{ fill: 'rgba(0,0,0,0.04)' }}
-          content={({ active, payload }) => {
-            if (!active || !payload?.length) return null
-            const d = payload[0].payload as (typeof data)[number]
-            return (
-              <div className="rounded-lg border border-line bg-white px-3 py-2 text-xs shadow-sm">
-                <div className="font-medium">{d.label}</div>
-                <div>{usePct ? `${pct(d.a, n)}% (${d.a} of ${n})` : `${d.a} of ${n}`}</div>
-              </div>
-            )
-          }}
-        />
-        <Bar dataKey="v" fill={COLOR_A} radius={[4, 4, 0, 0]} maxBarSize={56} minPointSize={1} isAnimationActive={false}>
-          <LabelList
-            dataKey="label"
-            content={(p) => {
-              const d = data.find((r) => r.label === String(p.value))
-              if (!d) return null
-              const x = Number(p.x) + Number(p.width) / 2
-              const y = Number(p.y)
-              return (
-                <text x={x} y={y - 20} textAnchor="middle" fontSize={12} fill={INK_2}>
-                  <tspan x={x}>{usePct ? `${pct(d.a, n)}%` : d.a}</tspan>
-                  <tspan x={x} dy="1.2em" fill={INK_3} fontSize={11}>
-                    {usePct ? `(${d.a}/${n})` : `of ${n}`}
-                  </tspan>
-                </text>
-              )
-            }}
-          />
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+    <ul className="flex items-stretch gap-1.5 sm:gap-3">
+      {rows.map((r) => (
+        <li key={r.label} className="group relative flex min-w-0 flex-1 flex-col items-center text-center">
+          <div className="flex h-44 w-full flex-col items-center justify-end border-b border-line">
+            <span className="text-xs leading-tight tabular-nums text-ink-2">
+              {usePct ? `${pct(r.a, n)}%` : r.a}
+              <span className="block text-[11px] text-ink-3">{usePct ? `(${r.a}/${n})` : `of ${n}`}</span>
+            </span>
+            <div
+              className="mt-1 w-full max-w-14 rounded-t bg-req"
+              style={{ height: `${(100 * r.a) / max * 0.7}%`, minHeight: 1 }}
+              aria-hidden="true"
+            />
+          </div>
+          <span className="mt-1.5 text-xs leading-tight text-ink-2 [overflow-wrap:anywhere]">{r.label}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
