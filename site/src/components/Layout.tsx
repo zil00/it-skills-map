@@ -17,6 +17,19 @@ export default function Layout() {
   useScrollMemory()
   return (
     <div className="flex min-h-screen flex-col">
+      {/* The site uses #/ links for pages, so the skip link moves focus itself instead of changing the hash. */}
+      <a
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault()
+          const main = document.getElementById('main')
+          main?.focus()
+          main?.scrollIntoView()
+        }}
+        className="sr-only z-50 rounded-md border border-line bg-white text-sm font-medium text-req shadow focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:px-3 focus:py-2"
+      >
+        Skip to content
+      </a>
       <header className="border-b border-line bg-white">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <NavLink to="/" className="flex items-center gap-2 font-semibold">
@@ -41,7 +54,7 @@ export default function Layout() {
           </nav>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:py-8">
+      <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 focus:outline-none sm:py-8">
         <Outlet />
       </main>
       <footer className="border-t border-line text-xs text-ink-3">
