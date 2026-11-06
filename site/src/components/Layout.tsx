@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { useEffect, useLayoutEffect, useRef } from 'react'
+import { NavLink, Outlet, useLocation, useNavigationType } from 'react-router-dom'
 import { useMeta } from '../lib/data'
 import { fmtDate, num } from '../lib/format'
 
@@ -13,12 +13,7 @@ const NAV = [
 
 export default function Layout() {
   const { data: meta } = useMeta()
-  const { pathname } = useLocation()
-  // Block body on purpose: newer Chrome returns a Promise from scrollTo, and an
-  // effect must return nothing or a cleanup function (returning it crashed the site).
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
+  useScrollMemory()
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-line bg-white">
@@ -59,4 +54,52 @@ export default function Layout() {
       </footer>
     </div>
   )
+}
+
+/**
+ * New page: start at the top. Back/Forward: return to where you were on that page.
+ * Positions are kept per history entry (location.key) for this tab.
+ */
+function useScrollMemory() {
+  const { pathname, key } = useLocation()
+  const navType = useNavigationType()
+  const saved = useRef(new Map<string, number>())
+  const current = useRef({ key, pathname })
+
+  useEffect(() => {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+    const onScroll = () => saved.current.set(current.current.key, window.scrollY)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Layout effect: switch keys before the browser fires the scroll event caused by the new page's height,
+  // so that event can't overwrite the old page's saved position.
+  useLayoutEffect(() => {
+    const prev = current.current
+    current.current = { key, pathname }
+    if (key === prev.key) return
+    // Note: block bodies on purpose. Newer Chrome returns a Promise from scrollTo, and an effect
+    // must return nothing or a cleanup function (returning it crashed the site, T-01).
+    if (navType === 'POP' && saved.current.has(key)) {
+      const y = saved.current.get(key)!
+      // The page may still be filling in; retry for up to ~1 s until it is tall enough.
+      let tries = 0
+      let raf = 0
+      const go = () => {
+        window.scrollTo(0, y)
+        if (Math.abs(window.scrollY - y) > 2 && tries++ < 60) raf = requestAnimationFrame(go)
+      }
+      go()
+      return () => {
+        cancelAnimationFrame(raf)
+      }
+    }
+    if (pathname !== prev.pathname) {
+      window.scrollTo(0, 0)
+    } else {
+      // Same page, new history entry (e.g. a filter changed the link): keep the position.
+      saved.current.set(key, window.scrollY)
+    }
+  }, [key, pathname, navType])
 }
