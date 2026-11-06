@@ -54,7 +54,7 @@ export default function Home() {
               <Link
                 key={r.slug}
                 to={`/roles/${r.slug}`}
-                className="group flex flex-col rounded-xl border border-line bg-white p-4 transition hover:border-req hover:shadow-sm"
+                className="group flex flex-col rounded-xl border border-line bg-card p-4 transition hover:border-req hover:shadow-sm"
               >
                 <div className="flex items-baseline justify-between gap-2">
                   <h3 className="font-semibold group-hover:text-link">{r.name}</h3>

@@ -77,7 +77,7 @@ export function BarList({ rows, n, series = ['Postings'], labelWidth = 190, lege
               </div>
               {/* Hover detail: the required / nice-to-have split behind the total. */}
               <div
-                className="pointer-events-none absolute left-0 top-full z-10 mt-1 hidden rounded-lg border border-line bg-white px-3 py-2 text-xs shadow-sm group-hover:block @lg:left-[calc(var(--lw)+0.75rem)]"
+                className="pointer-events-none absolute left-0 top-full z-10 mt-1 hidden rounded-lg border border-line bg-card px-3 py-2 text-xs shadow-sm group-hover:block @lg:left-[calc(var(--lw)+0.75rem)]"
                 aria-hidden="true"
               >
                 <div className="mb-1 font-medium text-ink">{d.label}</div>

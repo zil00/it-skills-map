@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigationType } from 'react-router-dom'
 import { useMeta } from '../lib/data'
 import { fmtDate, num } from '../lib/format'
@@ -26,17 +26,18 @@ export default function Layout() {
           main?.focus()
           main?.scrollIntoView()
         }}
-        className="sr-only z-50 rounded-md border border-line bg-white text-sm font-medium text-link shadow focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:px-3 focus:py-2"
+        className="sr-only z-50 rounded-md border border-line bg-card text-sm font-medium text-link shadow focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:px-3 focus:py-2"
       >
         Skip to content
       </a>
-      <header className="border-b border-line bg-white">
+      <header className="border-b border-line bg-card">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <NavLink to="/" className="flex items-center gap-2 font-semibold">
             <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="h-6 w-6" />
             IT Skills Map
           </NavLink>
-          <nav className="flex flex-wrap gap-1 text-sm">
+          <ThemeToggle />
+          <nav className="flex w-full flex-wrap gap-1 text-sm md:w-auto">
             {NAV.map(([to, label]) => (
               <NavLink
                 key={to}
@@ -45,7 +46,7 @@ export default function Layout() {
                 className={({ isActive }) => {
                   // Role pages belong to "Roles".
                   const on = isActive || (to === '/' && pathname.startsWith('/roles/'))
-                  return `rounded-md px-2.5 py-1.5 ${on ? 'bg-req/10 font-medium text-link' : 'text-ink-2 hover:bg-black/5'}`
+                  return `rounded-md px-2.5 py-1.5 ${on ? 'bg-req/10 font-medium text-link' : 'text-ink-2 hover:bg-ink/5'}`
                 }}
               >
                 {label}
@@ -118,4 +119,34 @@ function useScrollMemory() {
       saved.current.set(key, window.scrollY)
     }
   }, [key, pathname, navType])
+}
+
+/** Light/dark switch. Starts from the OS setting; a choice is remembered on this device. */
+function ThemeToggle() {
+  const osDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches
+  const [dark, setDark] = useState(() => {
+    const t = document.documentElement.dataset.theme
+    return t ? t === 'dark' : osDark()
+  })
+  const flip = () => {
+    const next = !dark
+    setDark(next)
+    document.documentElement.dataset.theme = next ? 'dark' : 'light'
+    try {
+      localStorage.setItem('theme', next ? 'dark' : 'light')
+    } catch {
+      // Private mode etc.: the choice just won't be remembered.
+    }
+  }
+  return (
+    <button
+      type="button"
+      onClick={flip}
+      aria-pressed={dark}
+      className="ml-auto flex min-h-9 items-center gap-1.5 rounded-md px-2.5 text-sm text-ink-2 hover:bg-ink/5 md:order-last"
+    >
+      <span aria-hidden="true">☾</span>
+      Dark mode
+    </button>
+  )
 }

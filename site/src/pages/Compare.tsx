@@ -9,7 +9,8 @@ import { MIN_N, money, pct, showPct } from '../lib/format'
 import type { RoleFile } from '../lib/types'
 
 const DEFAULT = ['help-desk-service-desk', 'it-support-specialist', 'systems-administrator']
-const COLORS = ['#2a78d6', '#eb6834', '#1baf7a']
+// Theme tokens, so the role colours switch with dark mode.
+const COLORS = ['var(--color-req)', 'var(--color-nice)', 'var(--color-third)']
 
 export default function Compare() {
   usePageTitle('Compare roles')
@@ -65,7 +66,7 @@ export default function Compare() {
   ]
   const SharedTag = ({ r }: { r: { shares: number[] } }) =>
     r.shares.every((x) => x >= 0.2) ? (
-      <span className="shrink-0 rounded-full bg-black/5 px-2 py-0.5 text-xs text-ink-2">Shared</span>
+      <span className="shrink-0 rounded-full bg-ink/5 px-2 py-0.5 text-xs text-ink-2">Shared</span>
     ) : (
       <span className="min-w-0 text-xs text-ink-3">
         Mostly {name(picked[r.shares.indexOf(Math.max(...r.shares))])}
@@ -90,7 +91,7 @@ export default function Compare() {
               onClick={() => toggle(r.slug)}
               aria-pressed={i >= 0}
               className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm ${
-                i >= 0 ? 'border-ink bg-white font-medium' : 'border-line text-ink-2 hover:border-ink-3'
+                i >= 0 ? 'border-ink bg-card font-medium' : 'border-line text-ink-2 hover:border-ink-3'
               } ${i < 0 && picked.length >= 3 ? 'opacity-50' : ''}`}
             >
               {i >= 0 && <span className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[i] }} />}
@@ -99,13 +100,13 @@ export default function Compare() {
           )
         })}
       </div>
-      <p className={`-mt-3 text-xs ${note ? 'font-medium text-amber-800' : 'text-ink-3'}`} role="status" aria-live="polite">
+      <p className={`-mt-3 text-xs ${note ? 'font-medium text-warn' : 'text-ink-3'}`} role="status" aria-live="polite">
         {note || 'Pick 2 or 3 roles. Click a selected role to remove it.'}
       </p>
 
       <FilterBar />
       {stats && stats.some((st) => !showPct(st.n)) && (
-        <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        <p role="status" className="rounded-lg bg-warn-bg px-3 py-2 text-sm text-warn">
           With these filters,{' '}
           {andList(
             stats
@@ -322,7 +323,7 @@ function ShareBar({ count, n, color, wide }: { count: number; n: number; color: 
   const p = pct(count, n)
   return (
     <div className={`flex items-center gap-2 ${wide ? 'flex-1' : ''}`}>
-      <div className={`h-2 overflow-hidden rounded-full bg-black/5 ${wide ? 'flex-1' : 'w-16 lg:w-20'}`}>
+      <div className={`h-2 overflow-hidden rounded-full bg-ink/5 ${wide ? 'flex-1' : 'w-16 lg:w-20'}`}>
         {showPct(n) && <div className="h-full rounded-full" style={{ width: `${p}%`, background: color }} />}
       </div>
       <Pct count={count} n={n} className="text-xs" />

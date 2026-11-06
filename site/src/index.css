@@ -1,14 +1,61 @@
 @import "tailwindcss";
 
+/* Light theme (default). Every colour the site uses is a token here, so dark mode swaps them in one place. */
 @theme {
   --color-ink: #0b0b0b;
   --color-ink-2: #52514e;
   --color-ink-3: #6b6a65; /* 5.4:1 on white, 4.7:1 on the palest tints (WCAG AA) */
-  --color-surface: #fcfcfb;
+  --color-surface: #fcfcfb; /* page */
+  --color-card: #ffffff; /* panels, header, inputs */
   --color-line: #e6e5e0;
-  --color-req: #2a78d6; /* bars and dots */
+  --color-req: #2a78d6; /* bars and dots: series 1 */
+  --color-nice: #eb6834; /* series 2 */
+  --color-third: #1baf7a; /* series 3 (Compare) */
   --color-link: #1f6bc4; /* blue text: 5.3:1 on white, 4.7:1 on the pale blue nav highlight */
-  --color-nice: #eb6834;
+  --color-warn-bg: #fffbeb;
+  --color-warn: #78350f;
+}
+
+:root {
+  color-scheme: light;
+}
+
+/*
+ * Dark theme: follows the OS unless the visitor picked a theme with the header toggle
+ * (stored as <html data-theme="light|dark">). Series colours are the same hues stepped for a
+ * dark surface (validated: CVD and contrast checks pass on #1a1a19); text is >= 4.5:1 on every surface.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --color-ink: #f0efec;
+    --color-ink-2: #c3c2b7;
+    --color-ink-3: #9d9c94;
+    --color-surface: #121211;
+    --color-card: #1a1a19;
+    --color-line: #34332f;
+    --color-req: #3987e5;
+    --color-nice: #d95926;
+    --color-third: #199e70;
+    --color-link: #6aa6ee;
+    --color-warn-bg: #3a2c0b;
+    --color-warn: #f3d48b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink: #f0efec;
+  --color-ink-2: #c3c2b7;
+  --color-ink-3: #9d9c94;
+  --color-surface: #121211;
+  --color-card: #1a1a19;
+  --color-line: #34332f;
+  --color-req: #3987e5;
+  --color-nice: #d95926;
+  --color-third: #199e70;
+  --color-link: #6aa6ee;
+  --color-warn-bg: #3a2c0b;
+  --color-warn: #f3d48b;
 }
 
 body {

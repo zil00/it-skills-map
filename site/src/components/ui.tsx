@@ -5,7 +5,7 @@ import { useMeta } from '../lib/data'
 
 export function Section({ title, sub, children, id }: { title: string; sub?: ReactNode; children: ReactNode; id?: string }) {
   return (
-    <section id={id} className="rounded-xl border border-line bg-white p-5 sm:p-6">
+    <section id={id} className="rounded-xl border border-line bg-card p-5 sm:p-6">
       <h2 className="text-lg font-semibold">{title}</h2>
       {sub && <p className="mt-1 text-sm text-ink-2">{sub}</p>}
       <div className="mt-4">{children}</div>
@@ -15,7 +15,7 @@ export function Section({ title, sub, children, id }: { title: string; sub?: Rea
 
 export function StatCard({ label, value, note }: { label: string; value: ReactNode; note?: ReactNode }) {
   return (
-    <div className="rounded-xl border border-line bg-white p-4">
+    <div className="rounded-xl border border-line bg-card p-4">
       <div className="text-sm text-ink-2">{label}</div>
       <div className="mt-1 text-2xl font-semibold tabular-nums">{value}</div>
       {note && <div className="mt-1 text-xs text-ink-3">{note}</div>}
@@ -42,12 +42,12 @@ export function SmallSample({ n }: { n: number }) {
   if (showPct(n)) return null
   if (n === 0)
     return (
-      <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+      <p role="status" className="rounded-lg bg-warn-bg px-3 py-2 text-sm text-warn">
         No postings match these filters. Try widening them.
       </p>
     )
   return (
-    <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+    <p role="status" className="rounded-lg bg-warn-bg px-3 py-2 text-sm text-warn">
       Only {n} posting{n === 1 ? '' : 's'} match these filters. Percentages are hidden below {MIN_N} postings, so
       counts are shown instead. Try widening the filters.
     </p>
@@ -59,7 +59,7 @@ export function Loading({ error }: { error?: string }) {
 }
 
 const selectCls =
-  'rounded-lg border border-line bg-white px-3 py-1.5 text-sm text-ink focus:outline-2 focus:outline-req'
+  'rounded-lg border border-line bg-card px-3 py-1.5 text-sm text-ink focus:outline-2 focus:outline-req'
 
 export function FilterBar({ n, hideSeniority = false, unit = 'postings' }: { n?: number; hideSeniority?: boolean; unit?: string }) {
   const { filters, setFilters } = useFilters()
@@ -80,14 +80,14 @@ export function FilterBar({ n, hideSeniority = false, unit = 'postings' }: { n?:
   )
   const sel = `${selectCls} w-full sm:w-auto`
   return (
-    <div className="sticky top-0 z-10 -mx-4 border-b border-line bg-surface/95 px-4 py-2 backdrop-blur sm:mx-0 sm:rounded-xl sm:border sm:bg-white/95 sm:py-3">
+    <div className="sticky top-0 z-10 -mx-4 border-b border-line bg-surface/95 px-4 py-2 backdrop-blur sm:mx-0 sm:rounded-xl sm:border sm:bg-card/95 sm:py-3">
       <div className="flex items-center gap-2 sm:hidden">
         <button
           type="button"
           aria-expanded={open}
           aria-controls="filter-panel"
           onClick={() => setOpen(!open)}
-          className="flex min-h-9 shrink-0 items-center gap-1 rounded-lg border border-line bg-white px-3 text-sm font-medium"
+          className="flex min-h-9 shrink-0 items-center gap-1 rounded-lg border border-line bg-card px-3 text-sm font-medium"
         >
           Filters{active ? ` (${picked.length})` : ''}
           <span aria-hidden="true" className={`text-xs transition ${open ? 'rotate-180' : ''}`}>▾</span>
