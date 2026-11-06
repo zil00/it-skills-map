@@ -5,7 +5,7 @@ import { FilterBar, Loading, Pct, Section } from '../components/ui'
 import { aggregate, isLearnable, quantile, top, yearsStated, type Stats } from '../lib/aggregate'
 import { roleFile, useJsonMany, useMeta, useRoles, useSkills, useSummary } from '../lib/data'
 import { useFilters } from '../lib/filters'
-import { money, pct, showPct } from '../lib/format'
+import { MIN_N, money, pct, showPct } from '../lib/format'
 import type { RoleFile } from '../lib/types'
 
 const DEFAULT = ['help-desk-service-desk', 'it-support-specialist', 'systems-administrator']
@@ -18,14 +18,23 @@ export default function Compare() {
   const { data: summary } = useSummary()
   const { filters } = useFilters()
   const [picked, setPicked] = useState<string[]>(DEFAULT)
+  const [note, setNote] = useState('')
   const files = useJsonMany<RoleFile>(picked.map(roleFile))
   const skills = useMemo(() => indexSkills(skillList ?? []), [skillList])
   const stats = useMemo(() => files?.map((f) => aggregate(f, filters)), [files, filters])
 
   if (!meta || !roles || !skillList || !summary) return <Loading />
 
-  const toggle = (slug: string) =>
-    setPicked((p) => (p.includes(slug) ? (p.length > 2 ? p.filter((s) => s !== slug) : p) : p.length < 3 ? [...p, slug] : p))
+  const toggle = (slug: string) => {
+    if (picked.includes(slug)) {
+      if (picked.length <= 2) return setNote('Keep at least 2 roles to compare. Pick another role first, then remove this one.')
+      setPicked(picked.filter((s) => s !== slug))
+    } else {
+      if (picked.length >= 3) return setNote('You can compare up to 3 roles. Remove one first by clicking it.')
+      setPicked([...picked, slug])
+    }
+    setNote('')
+  }
   const name = (slug: string) => roles.find((r) => r.slug === slug)?.name ?? slug
 
   // Skills to compare: the most-mentioned learnable skills across the picked roles.
@@ -89,9 +98,23 @@ export default function Compare() {
           )
         })}
       </div>
-      <p className="-mt-3 text-xs text-ink-3">Up to 3 roles. Click a selected role to remove it.</p>
+      <p className={`-mt-3 text-xs ${note ? 'font-medium text-amber-800' : 'text-ink-3'}`} role="status" aria-live="polite">
+        {note || 'Pick 2 or 3 roles. Click a selected role to remove it.'}
+      </p>
 
       <FilterBar />
+      {stats && stats.some((st) => !showPct(st.n)) && (
+        <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          With these filters,{' '}
+          {andList(
+            stats
+              .map((st, i) => [st, i] as const)
+              .filter(([st]) => !showPct(st.n))
+              .map(([st, i]) => `${name(picked[i])} has ${st.n === 0 ? 'no postings' : `only ${st.n} posting${st.n === 1 ? '' : 's'}`}`),
+          )}
+          . Percentages are hidden below {MIN_N} postings, so counts are shown instead. Try widening the filters.
+        </p>
+      )}
 
       {!stats ? (
         <Loading />
@@ -248,6 +271,9 @@ export default function Compare() {
     )
   }
 }
+
+/** ["a"] -> "a", ["a","b"] -> "a and b", ["a","b","c"] -> "a; b and c" (role names contain commas). */
+const andList = (xs: string[]) => (xs.length < 2 ? (xs[0] ?? '') : `${xs.slice(0, -1).join('; ')} and ${xs[xs.length - 1]}`)
 
 function medianYears(st: Stats) {
   const y = yearsStated(st)
