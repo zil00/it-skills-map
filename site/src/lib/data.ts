@@ -56,3 +56,10 @@ export const useSummary = () => useJson<CellFile>('summary.json')
 export const useEntry = () => useJson<CellFile>('entry_level.json')
 export const useRole = (slug: string) => useJson<RoleFile>(`roles/${slug}.json`)
 export const roleFile = (slug: string) => `roles/${slug}.json`
+
+/** Sets the browser tab title, which screen readers also announce when the page changes. */
+export function usePageTitle(title?: string) {
+  useEffect(() => {
+    document.title = title ? `${title} · IT Skills Map` : 'IT Skills Map: what Canadian IT jobs ask for'
+  }, [title])
+}

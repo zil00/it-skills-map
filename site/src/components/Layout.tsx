@@ -13,6 +13,7 @@ const NAV = [
 
 export default function Layout() {
   const { data: meta } = useMeta()
+  const { pathname } = useLocation()
   useScrollMemory()
   return (
     <div className="flex min-h-screen flex-col">
@@ -28,9 +29,11 @@ export default function Layout() {
                 key={to}
                 to={to}
                 end={to === '/'}
-                className={({ isActive }) =>
-                  `rounded-md px-2.5 py-1.5 ${isActive ? 'bg-req/10 font-medium text-req' : 'text-ink-2 hover:bg-black/5'}`
-                }
+                className={({ isActive }) => {
+                  // Role pages belong to "Roles".
+                  const on = isActive || (to === '/' && pathname.startsWith('/roles/'))
+                  return `rounded-md px-2.5 py-1.5 ${on ? 'bg-req/10 font-medium text-req' : 'text-ink-2 hover:bg-black/5'}`
+                }}
               >
                 {label}
               </NavLink>

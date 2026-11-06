@@ -1,8 +1,9 @@
 import { Loading, Section } from '../components/ui'
-import { useMeta, useRoles } from '../lib/data'
+import { useMeta, useRoles, usePageTitle } from '../lib/data'
 import { fmtDate, num } from '../lib/format'
 
 export default function About() {
+  usePageTitle('About the data')
   const { data: meta } = useMeta()
   const { data: roles } = useRoles()
   if (!meta || !roles) return <Loading />

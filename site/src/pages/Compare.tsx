@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { fmtYears, indexSkills, SalaryText } from '../components/panels'
 import { FilterBar, Loading, Pct, Section } from '../components/ui'
 import { aggregate, isLearnable, quantile, top, yearsStated, type Stats } from '../lib/aggregate'
-import { roleFile, useJsonMany, useMeta, useRoles, useSkills, useSummary } from '../lib/data'
+import { roleFile, useJsonMany, useMeta, useRoles, useSkills, useSummary, usePageTitle } from '../lib/data'
 import { useFilters } from '../lib/filters'
 import { MIN_N, money, pct, showPct } from '../lib/format'
 import type { RoleFile } from '../lib/types'
@@ -12,6 +12,7 @@ const DEFAULT = ['help-desk-service-desk', 'it-support-specialist', 'systems-adm
 const COLORS = ['#2a78d6', '#eb6834', '#1baf7a']
 
 export default function Compare() {
+  usePageTitle('Compare roles')
   const { data: meta } = useMeta()
   const { data: roles } = useRoles()
   const { data: skillList } = useSkills()

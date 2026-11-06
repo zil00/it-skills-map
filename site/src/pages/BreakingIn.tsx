@@ -4,10 +4,11 @@ import { BarList } from '../components/charts'
 import { CertsPanel, EducationPanel, indexSkills, SalaryText, SkillsPanel, YearsPanel } from '../components/panels'
 import { FilterBar, Loading, Pct, Section, SmallSample, StatCard } from '../components/ui'
 import { aggregate, top, yearsStated } from '../lib/aggregate'
-import { useEntry, useRoles, useSkills } from '../lib/data'
+import { useEntry, useRoles, useSkills, usePageTitle } from '../lib/data'
 import { useFilters } from '../lib/filters'
 
 export default function BreakingIn() {
+  usePageTitle('Breaking in')
   const { data: entry, error } = useEntry()
   const { data: skillList } = useSkills()
   const { data: roles } = useRoles()

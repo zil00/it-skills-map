@@ -15,7 +15,7 @@ import {
 } from '../components/panels'
 import { FilterBar, Loading, Pct, Section, SmallSample, StatCard } from '../components/ui'
 import { aggregate, isLearnable, quantile, top, yearsStated, type Stats } from '../lib/aggregate'
-import { useMeta, useRole, useSkills } from '../lib/data'
+import { useMeta, useRole, useSkills, usePageTitle } from '../lib/data'
 import { useFilters } from '../lib/filters'
 import { FLAG_LABEL, showPct } from '../lib/format'
 
@@ -23,6 +23,7 @@ export default function Role() {
   const { slug = '' } = useParams()
   const { data: meta } = useMeta()
   const { data: role, error } = useRole(slug)
+  usePageTitle(role?.name)
   const { data: skillList } = useSkills()
   const { filters } = useFilters()
   const skills = useMemo(() => indexSkills(skillList ?? []), [skillList])

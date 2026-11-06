@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom'
 import { CertsPanel, indexSkills, ProvincePanel, RemotePanel, SalaryText, skillRows, SkillsPanel } from '../components/panels'
 import { FilterBar, Loading, Pct, SmallSample, StatCard } from '../components/ui'
 import { aggregate, isLearnable } from '../lib/aggregate'
-import { useMeta, useRoles, useSkills, useSummary } from '../lib/data'
+import { useMeta, useRoles, useSkills, useSummary, usePageTitle } from '../lib/data'
 import { useFilters } from '../lib/filters'
 import { fmtDate, num } from '../lib/format'
 
 export default function Home() {
+  usePageTitle()
   const { data: meta } = useMeta()
   const { data: roles } = useRoles()
   const { data: skillList } = useSkills()

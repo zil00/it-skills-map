@@ -4,7 +4,7 @@ import { BarList } from '../components/charts'
 import { indexSkills } from '../components/panels'
 import { FilterBar, Loading, Pct, Section, SmallSample } from '../components/ui'
 import { aggregate, isLearnable } from '../lib/aggregate'
-import { useRoles, useSkills, useSummary } from '../lib/data'
+import { useRoles, useSkills, useSummary, usePageTitle } from '../lib/data'
 import { useFilters } from '../lib/filters'
 import { fold, showPct } from '../lib/format'
 
@@ -19,6 +19,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 }
 
 export default function Skills() {
+  usePageTitle('Skills explorer')
   const { data: skillList } = useSkills()
   const { data: summary, error } = useSummary()
   const { data: roles } = useRoles()
