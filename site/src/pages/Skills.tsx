@@ -120,7 +120,7 @@ function Big({ label, count, n }: { label: string; count: number; n: number }) {
   )
 }
 
-/** Each role has its own n, so render one BarList row per role. */
+/** Each role has its own n, carried on each row. */
 function RoleBars({ rows }: { rows: { label: string; a: number; b: number; n: number }[] }) {
   const big = rows.filter((r) => showPct(r.n))
   const small = rows.filter((r) => !showPct(r.n))
@@ -134,9 +134,7 @@ function RoleBars({ rows }: { rows: { label: string; a: number; b: number; n: nu
           <span className="inline-block h-2.5 w-2.5 rounded-sm bg-nice" /> Nice to have
         </span>
       </div>
-      {big.map((r) => (
-        <BarList key={r.label} rows={[r]} n={r.n} series={['Required', 'Nice to have']} labelWidth={230} legend={false} fixedMax={100} />
-      ))}
+      <BarList rows={big} n={big[0]?.n ?? 0} series={['Required', 'Nice to have']} labelWidth={230} legend={false} fixedMax={100} />
       {small.length > 0 && (
         <p className="pt-2 text-xs text-ink-3">
           Too few postings for a %:{' '}
