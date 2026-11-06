@@ -30,9 +30,13 @@ export default function Home() {
       <div className="pt-2">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">What do IT jobs in Canada actually ask for?</h1>
         <p className="mt-3 max-w-2xl text-ink-2">
-          We read {num(meta.in_scope_unique)} entry-level and early-career IT job postings from across Canada (posted{' '}
-          {fmtDate(meta.posted_from)} – {fmtDate(meta.posted_to)}) and counted the skills, certifications, experience and
-          pay they mention. Pick a role to see what you need to get hired.
+          We read {num(meta.in_scope_unique)} IT job postings from across Canada, from help desk to systems and security
+          roles (posted {fmtDate(meta.posted_from)} – {fmtDate(meta.posted_to)}), and counted the skills, certifications,
+          experience and pay they mention. Pick a role to see what you need to get hired. Just starting out? See{' '}
+          <Link to="/breaking-in" className="font-medium text-req underline underline-offset-2">
+            Breaking in
+          </Link>{' '}
+          for the entry-level postings only.
         </p>
       </div>
 
