@@ -84,7 +84,7 @@ export default function Home() {
           value={<Pct count={st.flags.get('bilingual') ?? 0} n={st.n} />}
           note="Mostly jobs in Quebec"
         />
-        <StatCard label="Typical pay (middle half)" value={<SalaryText st={st} />} note={`n = ${st.sal.length} postings that list pay`} />
+        <StatCard label="Typical pay range" value={<SalaryText st={st} />} note={`Middle 50% of the ${st.sal.length} postings that list pay`} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

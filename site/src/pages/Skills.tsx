@@ -12,7 +12,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   cert: 'Certification',
   tool: 'Tool',
   platform: 'Platform',
-  concept: 'Area',
+  concept: 'Skill area',
   soft: 'Soft skill',
   language: 'Language',
   other: 'Condition',

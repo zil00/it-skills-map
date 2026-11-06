@@ -55,7 +55,7 @@ export default function Compare() {
     ['Entry-level postings', (st) => <Pct count={st.seniority.get('entry') ?? 0} n={st.n} />],
     ['Typical experience asked', (st) => medianYears(st)],
     [
-      'Pay (middle half)',
+      'Typical pay range (middle 50%)',
       (st) => (
         <>
           <SalaryText st={st} /> <span className="text-xs font-normal text-ink-3">(n={st.sal.length})</span>

@@ -61,7 +61,7 @@ export const fmtYears = (y: number) => (y === 0 ? 'no experience' : `${Math.roun
 export function SeniorityPanel({ st, meta }: { st: Stats; meta: Meta }) {
   const rows = meta.seniority.map((s) => ({ label: SENIORITY_LABEL[s], a: st.seniority.get(s) ?? 0 }))
   return (
-    <Section title="Seniority mix" sub="From the job title, then years asked for, then LinkedIn's level.">
+    <Section title="Seniority mix" sub="We take the level from the job title. If the title doesn't say, we use the years of experience asked for, then the level LinkedIn shows.">
       <ColumnChart rows={rows} n={st.n} />
     </Section>
   )
@@ -123,7 +123,7 @@ export function SalaryPanel({ st }: { st: Stats }) {
   return (
     <Section
       title="Pay"
-      sub={`Only ${n} of ${st.n} postings list pay. Hourly pay is converted at 2,080 hours a year. Range = middle half of postings.`}
+      sub={`Only ${n} of ${st.n} postings list pay. Hourly pay is converted at 2,080 hours a year. The typical range is the middle 50%: a quarter of postings pay less, a quarter pay more.`}
     >
       {showPct(n) ? (
         <div className="grid grid-cols-3 gap-3 text-center">

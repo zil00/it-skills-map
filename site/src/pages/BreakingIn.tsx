@@ -51,7 +51,7 @@ export default function BreakingIn() {
           value={<Pct count={noDegree} n={st.n} />}
           note="diploma, no formal requirement, or not mentioned"
         />
-        <StatCard label="Pay (middle half)" value={<SalaryText st={st} />} note={`n = ${st.sal.length} postings that list pay`} />
+        <StatCard label="Typical pay range" value={<SalaryText st={st} />} note={`Middle 50% of the ${st.sal.length} postings that list pay`} />
       </div>
 
       <SkillsPanel st={st} skills={skills} k={12} title="Skills entry-level postings ask for" />

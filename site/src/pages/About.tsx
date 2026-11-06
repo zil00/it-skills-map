@@ -72,7 +72,7 @@ export default function About() {
             When fewer than {meta.min_n_for_percent} postings match your filters, percentages are hidden and plain
             counts are shown, because a % of a handful of postings is mostly noise.
           </li>
-          <li>Pay ranges show the middle half of postings that list pay; hourly pay is converted at 2,080 hours a year.</li>
+          <li>Pay ranges show the middle 50% of postings that list pay (a quarter pay less, a quarter pay more); hourly pay is converted at 2,080 hours a year.</li>
         </ul>
       </Section>
 
