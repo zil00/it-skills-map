@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useFilters } from '../lib/filters'
 import { MIN_N, num, pct, REMOTE_LABEL, SENIORITY_LABEL, showPct } from '../lib/format'
 import { useMeta } from '../lib/data'
@@ -64,15 +64,45 @@ const selectCls =
 export function FilterBar({ n, hideSeniority = false, unit = 'postings' }: { n?: number; hideSeniority?: boolean; unit?: string }) {
   const { filters, setFilters } = useFilters()
   const { data: meta } = useMeta()
+  // Phones: the bar collapses to one line and the dropdowns open on demand, so it doesn't cover the page.
+  const [open, setOpen] = useState(false)
   if (!meta) return null
-  const active = filters.province || filters.remote || (!hideSeniority && filters.seniority)
+  const picked = [
+    filters.province && meta.provinces[filters.province],
+    !hideSeniority && filters.seniority && SENIORITY_LABEL[filters.seniority],
+    filters.remote && REMOTE_LABEL[filters.remote],
+  ].filter(Boolean) as string[]
+  const active = picked.length > 0
+  const count = n !== undefined && (
+    <span className="text-sm whitespace-nowrap text-ink-2">
+      <strong className="text-ink tabular-nums">{num(n)}</strong> {unit}
+    </span>
+  )
+  const sel = `${selectCls} w-full sm:w-auto`
   return (
-    <div className="sticky top-0 z-10 -mx-4 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur sm:mx-0 sm:rounded-xl sm:border sm:bg-white/95">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-ink-2">Filter:</span>
+    <div className="sticky top-0 z-10 -mx-4 border-b border-line bg-surface/95 px-4 py-2 backdrop-blur sm:mx-0 sm:rounded-xl sm:border sm:bg-white/95 sm:py-3">
+      <div className="flex items-center gap-2 sm:hidden">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls="filter-panel"
+          onClick={() => setOpen(!open)}
+          className="flex min-h-9 shrink-0 items-center gap-1 rounded-lg border border-line bg-white px-3 text-sm font-medium"
+        >
+          Filters{active ? ` (${picked.length})` : ''}
+          <span aria-hidden="true" className={`text-xs transition ${open ? 'rotate-180' : ''}`}>▾</span>
+        </button>
+        <span className="min-w-0 flex-1 truncate text-xs text-ink-2">{active ? picked.join(' · ') : 'All of Canada'}</span>
+        {count}
+      </div>
+      <div
+        id="filter-panel"
+        className={`${open ? 'grid' : 'hidden'} mt-2 grid-cols-1 gap-2 sm:mt-0 sm:flex sm:flex-wrap sm:items-center`}
+      >
+        <span className="hidden text-sm font-medium text-ink-2 sm:inline">Filter:</span>
         <select
           aria-label="Province"
-          className={selectCls}
+          className={sel}
           value={filters.province}
           onChange={(e) => setFilters({ ...filters, province: e.target.value })}
         >
@@ -86,7 +116,7 @@ export function FilterBar({ n, hideSeniority = false, unit = 'postings' }: { n?:
         {!hideSeniority && (
           <select
             aria-label="Seniority"
-            className={selectCls}
+            className={sel}
             value={filters.seniority}
             onChange={(e) => setFilters({ ...filters, seniority: e.target.value })}
           >
@@ -100,7 +130,7 @@ export function FilterBar({ n, hideSeniority = false, unit = 'postings' }: { n?:
         )}
         <select
           aria-label="Work arrangement"
-          className={selectCls}
+          className={sel}
           value={filters.remote}
           onChange={(e) => setFilters({ ...filters, remote: e.target.value })}
         >
@@ -111,19 +141,25 @@ export function FilterBar({ n, hideSeniority = false, unit = 'postings' }: { n?:
             </option>
           ))}
         </select>
-        {active && (
+        <div className="flex items-center gap-2 sm:contents">
+          {active && (
+            <button
+              type="button"
+              className="min-h-9 rounded-lg px-2 text-sm text-req hover:underline"
+              onClick={() => setFilters({ province: '', seniority: hideSeniority ? filters.seniority : '', remote: '' })}
+            >
+              Clear
+            </button>
+          )}
           <button
-            className="rounded-lg px-2 py-1.5 text-sm text-req hover:underline"
-            onClick={() => setFilters({ province: '', seniority: hideSeniority ? filters.seniority : '', remote: '' })}
+            type="button"
+            className="ml-auto min-h-9 rounded-lg px-2 text-sm font-medium text-ink-2 sm:hidden"
+            onClick={() => setOpen(false)}
           >
-            Clear
+            Done
           </button>
-        )}
-        {n !== undefined && (
-          <span className="ml-auto text-sm text-ink-2">
-            <strong className="text-ink tabular-nums">{num(n)}</strong> {unit}
-          </span>
-        )}
+        </div>
+        {count && <span className="ml-auto hidden sm:inline">{count}</span>}
       </div>
     </div>
   )
