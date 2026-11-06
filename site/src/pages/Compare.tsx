@@ -39,6 +39,29 @@ export default function Compare() {
       .slice(0, 18)
   }
 
+  const GLANCE: [string, (st: Stats) => React.ReactNode][] = [
+    ['Postings', (st) => st.n],
+    ['Entry-level postings', (st) => <Pct count={st.seniority.get('entry') ?? 0} n={st.n} />],
+    ['Typical experience asked', (st) => medianYears(st)],
+    [
+      'Pay (middle half)',
+      (st) => (
+        <>
+          <SalaryText st={st} /> <span className="text-xs font-normal text-ink-3">(n={st.sal.length})</span>
+        </>
+      ),
+    ],
+    ['Need English + French', (st) => <Pct count={st.flags.get('bilingual') ?? 0} n={st.n} />],
+  ]
+  const SharedTag = ({ r }: { r: { shares: number[] } }) =>
+    r.shares.every((x) => x >= 0.2) ? (
+      <span className="shrink-0 rounded-full bg-black/5 px-2 py-0.5 text-xs text-ink-2">Shared</span>
+    ) : (
+      <span className="min-w-0 text-xs text-ink-3">
+        Mostly {name(picked[r.shares.indexOf(Math.max(...r.shares))])}
+      </span>
+    )
+
   return (
     <div className="space-y-6">
       <div>
@@ -75,37 +98,37 @@ export default function Compare() {
       ) : (
         <>
           <Section title="At a glance">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[520px] text-sm">
+            {/* Phones: one block per measure, one line per role. */}
+            <dl className="divide-y divide-line text-sm md:hidden">
+              {GLANCE.map(([label, cell]) => (
+                <div key={label} className="py-2.5">
+                  <dt className="mb-1 text-ink-2">{label}</dt>
+                  {stats.map((st, i) => (
+                    <dd key={i} className="flex items-baseline gap-2 py-0.5">
+                      <RoleDot i={i} />
+                      <span className="min-w-0 flex-1 truncate text-ink-2">{name(picked[i])}</span>
+                      <span className="shrink-0 font-medium tabular-nums">{cell(st)}</span>
+                    </dd>
+                  ))}
+                </div>
+              ))}
+            </dl>
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-ink-2">
-                    <th className="py-2 pr-4 font-normal"></th>
+                    <th className="py-2 pr-4 font-normal"><span className="sr-only">Measure</span></th>
                     {picked.map((s, i) => (
-                      <th key={s} className="py-2 pr-4 font-semibold text-ink">
+                      <th key={s} className="py-2 pr-4 align-bottom font-semibold text-ink">
                         <RoleDot i={i} /> {name(s)}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  <GlanceRow label="Postings" stats={stats} cell={(st) => st.n} />
-                  <GlanceRow
-                    label="Entry-level postings"
-                    stats={stats}
-                    cell={(st) => <Pct count={st.seniority.get('entry') ?? 0} n={st.n} />}
-                  />
-                  <GlanceRow label="Typical experience asked" stats={stats} cell={(st) => medianYears(st)} />
-                  <GlanceRow label="Pay (middle half)" stats={stats} cell={(st) => (
-                      <>
-                        <SalaryText st={st} />{' '}
-                        <span className="text-xs font-normal text-ink-3">(n={st.sal.length})</span>
-                      </>
-                    )} />
-                  <GlanceRow
-                    label="Need English + French"
-                    stats={stats}
-                    cell={(st) => <Pct count={st.flags.get('bilingual') ?? 0} n={st.n} />}
-                  />
+                  {GLANCE.map(([label, cell]) => (
+                    <GlanceRow key={label} label={label} stats={stats} cell={cell} />
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -115,41 +138,53 @@ export default function Compare() {
             title="Skills side by side"
             sub="Share of each role's postings that mention the skill (required or nice to have). “Shared” = at least 20% in every role picked."
           >
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[620px] text-sm">
+            {/* Phones: one block per skill, one bar per role. */}
+            <div className="md:hidden">
+              <Legend names={picked.map(name)} />
+              <ul className="divide-y divide-line text-sm">
+                {rows.map((r) => (
+                  <li key={r.id} className="py-2.5">
+                    <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-2">
+                      <span className="font-medium">{skills.get(r.id)?.name}</span>
+                      <SharedTag r={r} />
+                    </div>
+                    {stats.map((st, i) => (
+                      <div key={i} className="flex items-center gap-2 py-0.5">
+                        <span className="sr-only">{name(picked[i])}:</span>
+                        <ShareBar count={st.any.get(r.id) ?? 0} n={st.n} color={COLORS[i]} wide />
+                      </div>
+                    ))}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-ink-2">
-                    <th className="py-2 pr-3 font-normal">Skill</th>
+                    <th className="py-2 pr-3 align-bottom font-normal">Skill</th>
                     {picked.map((s, i) => (
-                      <th key={s} className="py-2 pr-3 font-normal">
+                      <th key={s} className="py-2 pr-3 align-bottom font-normal">
                         <RoleDot i={i} /> {name(s)}
                       </th>
                     ))}
-                    <th className="py-2 font-normal"></th>
+                    <th className="py-2 font-normal"><span className="sr-only">Shared or role-specific</span></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {rows.map((r) => {
-                    const shared = r.shares.every((s) => s >= 0.2)
-                    const best = r.shares.indexOf(Math.max(...r.shares))
-                    return (
-                      <tr key={r.id}>
-                        <td className="py-2 pr-3 font-medium">{skills.get(r.id)?.name}</td>
-                        {stats.map((st, i) => (
-                          <td key={i} className="py-2 pr-3">
-                            <ShareBar count={st.any.get(r.id) ?? 0} n={st.n} color={COLORS[i]} />
-                          </td>
-                        ))}
-                        <td className="py-2 text-xs">
-                          {shared ? (
-                            <span className="rounded-full bg-black/5 px-2 py-0.5 text-ink-2">Shared</span>
-                          ) : (
-                            <span className="text-ink-3">Mostly {name(picked[best])}</span>
-                          )}
+                  {rows.map((r) => (
+                    <tr key={r.id}>
+                      <td className="py-2 pr-3 font-medium">{skills.get(r.id)?.name}</td>
+                      {stats.map((st, i) => (
+                        <td key={i} className="py-2 pr-3">
+                          <ShareBar count={st.any.get(r.id) ?? 0} n={st.n} color={COLORS[i]} />
                         </td>
-                      </tr>
-                    )
-                  })}
+                      ))}
+                      <td className="py-2 text-xs">
+                        <SharedTag r={r} />
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -226,7 +261,9 @@ function medianYears(st: Stats) {
 }
 
 function RoleDot({ i }: { i: number }) {
-  return <span className="mr-1 inline-block h-2.5 w-2.5 rounded-full align-middle" style={{ background: COLORS[i] }} />
+  return (
+    <span className="mr-1 inline-block h-2.5 w-2.5 shrink-0 rounded-full align-middle" style={{ background: COLORS[i] }} />
+  )
 }
 
 function GlanceRow({ label, stats, cell }: { label: string; stats: Stats[]; cell: (st: Stats) => React.ReactNode }) {
@@ -242,11 +279,23 @@ function GlanceRow({ label, stats, cell }: { label: string; stats: Stats[]; cell
   )
 }
 
-function ShareBar({ count, n, color }: { count: number; n: number; color: string }) {
+function Legend({ names }: { names: string[] }) {
+  return (
+    <div className="mb-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-2" aria-hidden="true">
+      {names.map((nm, i) => (
+        <span key={nm} className="flex items-center">
+          <RoleDot i={i} /> {nm}
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function ShareBar({ count, n, color, wide }: { count: number; n: number; color: string; wide?: boolean }) {
   const p = pct(count, n)
   return (
-    <div className="flex items-center gap-2">
-      <div className="h-2 w-20 overflow-hidden rounded-full bg-black/5">
+    <div className={`flex items-center gap-2 ${wide ? 'flex-1' : ''}`}>
+      <div className={`h-2 overflow-hidden rounded-full bg-black/5 ${wide ? 'flex-1' : 'w-16 lg:w-20'}`}>
         {showPct(n) && <div className="h-full rounded-full" style={{ width: `${p}%`, background: color }} />}
       </div>
       <Pct count={count} n={n} className="text-xs" />
