@@ -6,7 +6,7 @@ import { FilterBar, Loading, Pct, Section, SmallSample } from '../components/ui'
 import { aggregate, isLearnable } from '../lib/aggregate'
 import { useRoles, useSkills, useSummary } from '../lib/data'
 import { useFilters } from '../lib/filters'
-import { fold, pct, showPct } from '../lib/format'
+import { fold, showPct } from '../lib/format'
 
 const CATEGORY_LABEL: Record<string, string> = {
   cert: 'Certification',
@@ -102,9 +102,7 @@ export default function Skills() {
                         <span className="block text-xs font-normal text-ink-3">also called “{aliasHit.get(s.id)}”</span>
                       )}
                     </span>
-                    <span className="shrink-0 text-xs text-ink-3 tabular-nums">
-                      {showPct(st.n) ? `${pct(c, st.n)}%` : c}
-                    </span>
+                    <Pct count={c} n={st.n} className="shrink-0 text-xs font-normal text-ink-2" />
                   </button>
                 </li>
               )
