@@ -38,7 +38,7 @@ export default function Role() {
   return (
     <div className="space-y-6">
       <div>
-        <Link to="/" className="text-sm text-req hover:underline">
+        <Link to="/" className="inline-block py-1 text-sm text-req hover:underline">
           ← All roles
         </Link>
         <h1 className="mt-2 text-3xl font-bold tracking-tight">{role.name}</h1>

@@ -241,7 +241,7 @@ export default function Compare() {
               <Fragment key={slug}>
                 <li className="relative rounded-lg border border-line bg-surface p-3">
                   <div className="text-xs text-ink-3">Step {i + 1}</div>
-                  <Link to={`/roles/${slug}`} className="font-semibold leading-snug text-req hover:underline">
+                  <Link to={`/roles/${slug}`} className="inline-block py-0.5 font-semibold leading-snug text-req hover:underline">
                     {name(slug)}
                   </Link>
                   <dl className="mt-2 space-y-1 text-xs">

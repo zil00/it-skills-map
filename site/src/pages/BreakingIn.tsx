@@ -92,7 +92,7 @@ export default function BreakingIn() {
         <BarList rows={roleRows} n={st.n} labelWidth={260} />
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
           {top(st.roles, 10).map(([slug]) => (
-            <Link key={slug} to={`/roles/${slug}`} className="text-req hover:underline">
+            <Link key={slug} to={`/roles/${slug}`} className="inline-block py-1 text-req hover:underline">
               {roleName(slug)} →
             </Link>
           ))}
