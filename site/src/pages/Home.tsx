@@ -81,7 +81,7 @@ export default function Home() {
         <StatCard
           label="Need English + French"
           value={<Pct count={st.flags.get('bilingual') ?? 0} n={st.n} />}
-          note="Mostly Quebec and federal jobs"
+          note="Mostly jobs in Quebec"
         />
         <StatCard label="Typical pay (middle half)" value={<SalaryText st={st} />} note={`n = ${st.sal.length} postings that list pay`} />
       </div>
