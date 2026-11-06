@@ -14,7 +14,11 @@ const NAV = [
 export default function Layout() {
   const { data: meta } = useMeta()
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  // Block body on purpose: newer Chrome returns a Promise from scrollTo, and an
+  // effect must return nothing or a cleanup function (returning it crashed the site).
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-line bg-white">
