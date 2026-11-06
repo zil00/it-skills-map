@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { CertsPanel, indexSkills, ProvincePanel, RemotePanel, SalaryText, skillRows, SkillsPanel } from '../components/panels'
-import { FilterBar, Loading, Pct, StatCard } from '../components/ui'
+import { FilterBar, Loading, Pct, SmallSample, StatCard } from '../components/ui'
 import { aggregate, isLearnable } from '../lib/aggregate'
 import { useMeta, useRoles, useSkills, useSummary } from '../lib/data'
 import { useFilters } from '../lib/filters'
@@ -37,6 +37,7 @@ export default function Home() {
       </div>
 
       <FilterBar n={st.n} />
+      <SmallSample n={st.n} />
 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Pick a role</h2>

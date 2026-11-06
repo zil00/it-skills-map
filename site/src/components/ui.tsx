@@ -40,8 +40,14 @@ export function Pct({ count, n, className = '' }: { count: number; n: number; cl
 
 export function SmallSample({ n }: { n: number }) {
   if (showPct(n)) return null
+  if (n === 0)
+    return (
+      <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        No postings match these filters. Try widening them.
+      </p>
+    )
   return (
-    <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+    <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
       Only {n} posting{n === 1 ? '' : 's'} match these filters. Percentages are hidden below {MIN_N} postings, so
       counts are shown instead. Try widening the filters.
     </p>
